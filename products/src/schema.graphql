@@ -1,8 +1,12 @@
 extend schema
-  @link(url: "https://specs.apollo.dev/federation/v2.3", import: ["@key"])
+  @link(
+    url: "https://specs.apollo.dev/federation/v2.3"
+    import: ["@key", "@shareable", "@external"]
+  )
 
 type Query {
   topProducts: [Book!]!
+  authors: [Author!]!
 }
 
 interface Product {
@@ -18,7 +22,11 @@ type Book implements Product @key(fields: "id") {
   author: Author
 }
 
-type Author {
+type Author @key(fields: "id") {
   id: ID!
   name: String!
+}
+
+type Review @key(fields: "id", resolvable: false) {
+  id: ID!
 }

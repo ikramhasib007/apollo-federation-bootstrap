@@ -4,24 +4,24 @@ import { buildSubgraphSchema } from "@apollo/subgraph";
 import { createYoga, maskError } from "graphql-yoga";
 import { createServer } from "http";
 import * as dataSources from "./data";
-import { Resolvers, ResponseStatus } from "./generated/graphql";
+import { Author, Resolvers, ResponseStatus } from "./generated/graphql";
 
 const typeDefs = parse(readFileSync('./src/schema.graphql', 'utf8'))
 
 const resolvers: Resolvers = {
   Query: {
     reviews: async (parent, args, ctx, info) => {
-      return dataSources.dataApi.allReviews()
+      return dataSources.api.allReviews()
     },
     // topRatedProducts: async (parent, args, ctx, info) => {
-    //   return dataSources.dataApi.allReviews()
+    //   return dataSources.api.allReviews()
     // },
   },
   Mutation: {
     submitReview: async (parent, args, createContext, info) => {
-      const newReview = dataSources.dataApi.addReview({
+      const newReview = dataSources.api.addReview({
         ...args.data,
-        id: `review-${dataSources.dataApi.allReviews().length}`
+        id: `review-${dataSources.api.allReviews().length}`
       })
 
       return {
@@ -35,8 +35,18 @@ const resolvers: Resolvers = {
       const review = parent as typeof dataSources.data[0]
       return { id: review.productId }
     },
+    author: (parent) => {
+      const review = parent as typeof dataSources.data[0]
+      return { id: review.authorId } as Author
+    },
     __resolveReference: (ref) => {
-      return dataSources.dataApi.reviewById(ref.id)
+      return dataSources.api.reviewById(ref.id)
+    }
+  },
+  Author: {
+    reviews: (parent) => {
+      const reviewsLists = dataSources.api.reviewManyByAuthorId(parent.id)
+      return reviewsLists
     }
   }
 };

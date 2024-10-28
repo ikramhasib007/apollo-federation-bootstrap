@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon src/index.ts",
-    "supergraph": "rover supergraph compose --config ./supergraph.yaml > supergraph.graphql",
+    "dev": "nodemon src/index.ts",
+    "supergraph": "rover supergraph compose --config ./supergraph.yaml > ./src/supergraph.graphql",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

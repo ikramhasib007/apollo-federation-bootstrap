@@ -8,7 +8,7 @@ import { useApolloFederation } from "@envelop/apollo-federation";
 async function buildGateway(app: ReturnType<typeof express>) {
   // Initialize the gateway
   const gateway = new ApolloGateway({
-    supergraphSdl: readFileSync("./supergraph.graphql", "utf-8"),
+    supergraphSdl: readFileSync("./src/supergraph.graphql", "utf-8"),
   });
 
   // Make sure all services are loaded

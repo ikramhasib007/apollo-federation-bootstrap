@@ -23,15 +23,15 @@ const commands = {
 const { result } = concurrently(
   [
     {
-      command: 'pnpm start',
+      command: 'pnpm dev',
       ...commands.products
     },
     {
-      command: 'pnpm start',
+      command: 'pnpm dev',
       ...commands.reviews
     },
     {
-      command: 'pnpm start',
+      command: 'pnpm dev',
       ...commands.gateway
     },
   ],

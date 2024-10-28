@@ -1,5 +1,8 @@
 extend schema
-  @link(url: "https://specs.apollo.dev/federation/v2.3", import: ["@key"])
+  @link(
+    url: "https://specs.apollo.dev/federation/v2.3"
+    import: ["@key", "@shareable"]
+  )
 
 type Query {
   reviews: [Review!]!
@@ -21,10 +24,16 @@ type Review @key(fields: "id") {
   id: ID!
   score: Int!
   book: Book
+  author: Author
 }
 
 type Book @key(fields: "id", resolvable: false) {
   id: ID!
+}
+
+type Author @key(fields: "id") {
+  id: ID!
+  reviews: [Review!]!
 }
 
 # type Product @key(fields: "id", resolvable: false) {

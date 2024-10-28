@@ -21,10 +21,12 @@ directive @join__unionMember(graph: join__Graph!, member: String!) repeatable on
 directive @link(url: String, as: String, for: link__Purpose, import: [link__Import]) repeatable on SCHEMA
 
 type Author
-  @join__type(graph: PRODUCTS)
+  @join__type(graph: PRODUCTS, key: "id")
+  @join__type(graph: REVIEWS, key: "id")
 {
   id: ID!
-  name: String!
+  name: String! @join__field(graph: PRODUCTS)
+  reviews: [Review!]! @join__field(graph: REVIEWS)
 }
 
 type Book implements Product
@@ -84,6 +86,7 @@ type Query
   @join__type(graph: REVIEWS)
 {
   topProducts: [Book!]! @join__field(graph: PRODUCTS)
+  authors: [Author!]! @join__field(graph: PRODUCTS)
   reviews: [Review!]! @join__field(graph: REVIEWS)
 }
 
@@ -95,11 +98,13 @@ enum ResponseStatus
 }
 
 type Review
+  @join__type(graph: PRODUCTS, key: "id", resolvable: false)
   @join__type(graph: REVIEWS, key: "id")
 {
   id: ID!
-  score: Int!
-  book: Book
+  score: Int! @join__field(graph: REVIEWS)
+  book: Book @join__field(graph: REVIEWS)
+  author: Author @join__field(graph: REVIEWS)
 }
 
 input SubmitReviewInput

@@ -11,12 +11,27 @@ const typeDefs = parse(readFileSync('./src/schema.graphql', 'utf8'))
 const resolvers: Resolvers = {
   Query: {
     topProducts: async (parent, args, ctx, info) => {
-      return dataSources.dataApi.topProducts()
+      return dataSources.api.topProducts()
+    },
+    authors: async (parent, args, ctx, info) => {
+      const authorsList = dataSources.api.allAuthors()
+      return authorsList
     },
   },
   Book: {
+    author: (parent) => {
+      const book = parent as typeof dataSources.products[0]
+      const authorData = dataSources.api.authorById(book.authorId!)
+      return authorData
+    },
     __resolveReference: (ref) => {
-      return dataSources.dataApi.productById(ref.id)
+      return dataSources.api.productById(ref.id)
+    }
+  },
+  Author: {
+    __resolveReference: (ref) => {
+      const authorData = dataSources.api.authorById(ref.id)
+      return authorData
     }
   }
 };
