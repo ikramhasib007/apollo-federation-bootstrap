@@ -1,0 +1,118 @@
+schema
+  @link(url: "https://specs.apollo.dev/link/v1.0")
+  @link(url: "https://specs.apollo.dev/join/v0.3", for: EXECUTION)
+{
+  query: Query
+  mutation: Mutation
+}
+
+directive @join__enumValue(graph: join__Graph!) repeatable on ENUM_VALUE
+
+directive @join__field(graph: join__Graph, requires: join__FieldSet, provides: join__FieldSet, type: String, external: Boolean, override: String, usedOverridden: Boolean) repeatable on FIELD_DEFINITION | INPUT_FIELD_DEFINITION
+
+directive @join__graph(name: String!, url: String!) on ENUM_VALUE
+
+directive @join__implements(graph: join__Graph!, interface: String!) repeatable on OBJECT | INTERFACE
+
+directive @join__type(graph: join__Graph!, key: join__FieldSet, extension: Boolean! = false, resolvable: Boolean! = true, isInterfaceObject: Boolean! = false) repeatable on OBJECT | INTERFACE | UNION | ENUM | INPUT_OBJECT | SCALAR
+
+directive @join__unionMember(graph: join__Graph!, member: String!) repeatable on UNION
+
+directive @link(url: String, as: String, for: link__Purpose, import: [link__Import]) repeatable on SCHEMA
+
+type Author
+  @join__type(graph: PRODUCTS)
+{
+  id: ID!
+  name: String!
+}
+
+type Book implements Product
+  @join__implements(graph: PRODUCTS, interface: "Product")
+  @join__type(graph: PRODUCTS, key: "id")
+  @join__type(graph: REVIEWS, key: "id", resolvable: false)
+{
+  id: ID!
+  name: String! @join__field(graph: PRODUCTS)
+  price: Int! @join__field(graph: PRODUCTS)
+  author: Author @join__field(graph: PRODUCTS)
+}
+
+scalar join__FieldSet
+
+enum join__Graph {
+  PRODUCTS @join__graph(name: "products", url: "http://localhost:5001/graphql")
+  REVIEWS @join__graph(name: "reviews", url: "http://localhost:5002/graphql")
+}
+
+scalar link__Import
+
+enum link__Purpose {
+  """
+  `SECURITY` features provide metadata necessary to securely resolve fields.
+  """
+  SECURITY
+
+  """
+  `EXECUTION` features provide metadata necessary for operation execution.
+  """
+  EXECUTION
+}
+
+type Mutation
+  @join__type(graph: REVIEWS)
+{
+  submitReview(data: SubmitReviewInput!): SubmitReviewResponse!
+}
+
+interface MutationResponse
+  @join__type(graph: REVIEWS)
+{
+  status: ResponseStatus!
+}
+
+interface Product
+  @join__type(graph: PRODUCTS)
+{
+  id: ID!
+  name: String!
+  price: Int!
+}
+
+type Query
+  @join__type(graph: PRODUCTS)
+  @join__type(graph: REVIEWS)
+{
+  topProducts: [Book!]! @join__field(graph: PRODUCTS)
+  reviews: [Review!]! @join__field(graph: REVIEWS)
+}
+
+enum ResponseStatus
+  @join__type(graph: REVIEWS)
+{
+  OK @join__enumValue(graph: REVIEWS)
+  BadRequest @join__enumValue(graph: REVIEWS)
+}
+
+type Review
+  @join__type(graph: REVIEWS, key: "id")
+{
+  id: ID!
+  score: Int!
+  book: Book
+}
+
+input SubmitReviewInput
+  @join__type(graph: REVIEWS)
+{
+  score: Int!
+  productId: String!
+}
+
+type SubmitReviewResponse implements MutationResponse
+  @join__implements(graph: REVIEWS, interface: "MutationResponse")
+  @join__type(graph: REVIEWS)
+{
+  status: ResponseStatus!
+  review: Review
+}

@@ -1,0 +1,10 @@
+federation_version: =2.8.1
+subgraphs:
+  products:
+    routing_url: http://localhost:5001/graphql
+    schema:
+      file: ../products/src/schema.graphql
+  reviews:
+    routing_url: http://localhost:5002/graphql
+    schema:
+      file: ../reviews/src/schema.graphql

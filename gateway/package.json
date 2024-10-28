@@ -1,0 +1,35 @@
+{
+  "name": "gateway",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon src/index.ts",
+    "supergraph": "rover supergraph compose --config ./supergraph.yaml > supergraph.graphql",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@apollo/gateway": "^2.9.3",
+    "@envelop/apollo-federation": "^5.0.0",
+    "@graphql-tools/federation": "^2.2.19",
+    "express": "^4.21.1",
+    "graphql": "^16.9.0",
+    "graphql-yoga": "^5.7.0",
+    "helmet": "^8.0.0"
+  },
+  "devDependencies": {
+    "@tsconfig/node20": "^20.1.4",
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.8.1",
+    "nodemon": "^3.1.7",
+    "ts-node": "^10.9.2",
+    "typescript": "5.5.4"
+  },
+  "volta": {
+    "node": "20.18.0",
+    "pnpm": "9.12.3"
+  }
+}

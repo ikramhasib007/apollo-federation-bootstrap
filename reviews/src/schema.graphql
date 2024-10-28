@@ -1,0 +1,42 @@
+extend schema
+  @link(url: "https://specs.apollo.dev/federation/v2.3", import: ["@key"])
+
+type Query {
+  reviews: [Review!]!
+  # topRatedProducts: [Product!]!
+}
+
+interface MutationResponse {
+  status: ResponseStatus!
+}
+type SubmitReviewResponse implements MutationResponse {
+  status: ResponseStatus!
+  review: Review
+}
+type Mutation {
+  submitReview(data: SubmitReviewInput!): SubmitReviewResponse!
+}
+
+type Review @key(fields: "id") {
+  id: ID!
+  score: Int!
+  book: Book
+}
+
+type Book @key(fields: "id", resolvable: false) {
+  id: ID!
+}
+
+# type Product @key(fields: "id", resolvable: false) {
+#   id: ID!
+# }
+
+input SubmitReviewInput {
+  score: Int!
+  productId: String!
+}
+
+enum ResponseStatus {
+  OK
+  BadRequest
+}
