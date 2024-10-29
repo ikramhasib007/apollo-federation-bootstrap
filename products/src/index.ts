@@ -10,12 +10,22 @@ const typeDefs = parse(readFileSync('./src/schema.graphql', 'utf8'))
 
 const resolvers: Resolvers = {
   Query: {
+    // @ts-expect-error -> tba
+    product: async (parent, args, ctx, info) => {
+      const productRes = dataSources.api.productById(args.id)
+      return productRes
+    },
+    // @ts-expect-error -> tba
     topProducts: async (parent, args, ctx, info) => {
       return dataSources.api.topProducts()
     },
     authors: async (parent, args, ctx, info) => {
       const authorsList = dataSources.api.allAuthors()
       return authorsList
+    },
+    // @ts-expect-error -> tba
+    books: async (parent, args, ctx, info) => {
+      return dataSources.api.allProducts()
     },
   },
   Book: {
@@ -24,9 +34,27 @@ const resolvers: Resolvers = {
       const authorData = dataSources.api.authorById(book.authorId!)
       return authorData
     },
+    // __resolveReference: (ref) => {
+    //   return dataSources.api.productById(ref.id)
+    // }
+  },
+  Product: {
+    // @ts-expect-error -> tba
     __resolveReference: (ref) => {
-      return dataSources.api.productById(ref.id)
-    }
+      const product = dataSources.api.productById(ref.id)
+      return product
+    },
+
+    // @ts-expect-error -> tba
+    __resolveType: (ref) => {
+      const product = ref as typeof dataSources.products[0]
+      let __typename
+      if (product.director) __typename = 'Movie'
+      // @ts-expect-error -> tba
+      if (product.author !== 'undefined') __typename = 'Book'
+      else __typename = null // GraphQLError is thrown
+      return __typename
+    },
   },
   Author: {
     __resolveReference: (ref) => {

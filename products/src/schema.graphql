@@ -1,15 +1,14 @@
 extend schema
-  @link(
-    url: "https://specs.apollo.dev/federation/v2.3"
-    import: ["@key", "@shareable", "@external"]
-  )
+  @link(url: "https://specs.apollo.dev/federation/v2.3", import: ["@key"])
 
 type Query {
-  topProducts: [Book!]!
+  product(id: ID!): Product!
+  topProducts: [Product!]!
   authors: [Author!]!
+  books: [Book!]!
 }
 
-interface Product {
+interface Product @key(fields: "id") {
   id: ID!
   name: String!
   price: Int!
@@ -32,8 +31,4 @@ type Movie implements Product @key(fields: "id") {
 type Author @key(fields: "id") {
   id: ID!
   name: String!
-}
-
-type Review @key(fields: "id", resolvable: false) {
-  id: ID!
 }

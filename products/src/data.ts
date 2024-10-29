@@ -1,8 +1,10 @@
+// Product as Book | Movie
 type Product = {
   id: string;
   name: string
   price: number
   authorId?: string
+  director?: String
 };
 type Author = {
   id: string;
@@ -24,7 +26,7 @@ export const authors: Author[] = [
   }
 ]
 
-// books or products
+// books as products
 export const products: Product[] = [
   {
     id: "product-1",
@@ -57,6 +59,14 @@ export const products: Product[] = [
     authorId: authors[1].id
   },
 ];
+export const movies: Product[] = [
+  {
+    id: "movie-1",
+    name: "Sweet smash!",
+    price: 200,
+    director: 'Quentin Tarantino'
+  },
+];
 
 type DataApi = {
   allProducts: () => Product[];
@@ -64,6 +74,8 @@ type DataApi = {
   productById: (id: string) => Product;
   allAuthors: () => Author[];
   authorById: (id: string) => Author;
+  movies: () => Product[];
+  movieById: (id: string) => Product;
 }
 
 export const api: DataApi = {
@@ -72,4 +84,6 @@ export const api: DataApi = {
   productById: (id) => products.find((r) => r.id === id)!,
   allAuthors: () => authors,
   authorById: (id) => authors.find((a) => a.id === id)!,
+  movies: () => movies,
+  movieById: (id) => movies.find((a) => a.id === id)!,
 };
