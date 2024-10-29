@@ -21,7 +21,7 @@ const resolvers: Resolvers = {
     submitReview: async (parent, args, createContext, info) => {
       const newReview = dataSources.api.addReview({
         ...args.data,
-        id: `review-${dataSources.api.allReviews().length}`
+        id: `review-${dataSources.api.allReviews().length + 1}`
       })
 
       return {

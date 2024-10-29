@@ -4,6 +4,7 @@ import { readFileSync } from "node:fs";
 import { createYoga, maskError } from 'graphql-yoga'
 import { ApolloGateway } from "@apollo/gateway";
 import { useApolloFederation } from "@envelop/apollo-federation";
+import { useApolloInlineTrace } from '@graphql-yoga/plugin-apollo-inline-trace'
 
 async function buildGateway(app: ReturnType<typeof express>) {
   // Initialize the gateway
@@ -26,6 +27,7 @@ async function buildGateway(app: ReturnType<typeof express>) {
       methods: ['POST'],
     },
     plugins: [
+      useApolloInlineTrace(),
       useApolloFederation({
         gateway,
       }),

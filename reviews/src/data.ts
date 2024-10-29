@@ -36,6 +36,12 @@ export const data: Review[] = [
     productId: "product-2",
     authorId: 'author-3',
   },
+  {
+    id: "review-6",
+    score: 5,
+    productId: "product-2",
+    authorId: 'author-2',
+  },
 ];
 
 type DataApi = {

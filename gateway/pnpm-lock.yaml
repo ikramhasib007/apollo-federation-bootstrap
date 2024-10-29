@@ -17,6 +17,9 @@ importers:
       '@graphql-tools/federation':
         specifier: ^2.2.19
         version: 2.2.19(@types/node@22.8.1)(graphql@16.9.0)
+      '@graphql-yoga/plugin-apollo-inline-trace':
+        specifier: ^3.7.0
+        version: 3.7.0(@envelop/core@5.0.2)(@graphql-tools/utils@10.5.5(graphql@16.9.0))(@whatwg-node/fetch@0.9.22)(graphql-yoga@5.7.0(graphql@16.9.0))(graphql@16.9.0)
       express:
         specifier: ^4.21.1
         version: 4.21.1
@@ -157,6 +160,13 @@ packages:
     resolution: {integrity: sha512-tVL6OrMe6UjqLosiE+EH9uxh2TQC0469GwF4tE014ugRaDDKKVWwFwZe0TBMlcyHKh5MD4ZxktWo/1hqUxIuhw==}
     engines: {node: '>=18.0.0'}
 
+  '@envelop/on-resolve@4.1.1':
+    resolution: {integrity: sha512-Zkc+OJMpmxStcx7DlCf/IqnKhCag8LJCfE0rzjnECdSQMBfdTY/9V5CtwdCM8kOAZAC0B4o9tVMwc/I8PfthqQ==}
+    engines: {node: '>=18.0.0'}
+    peerDependencies:
+      '@envelop/core': ^5.0.2
+      graphql: ^14.0.0 || ^15.0.0 || ^16.0.0
+
   '@envelop/types@5.0.0':
     resolution: {integrity: sha512-IPjmgSc4KpQRlO4qbEDnBEixvtb06WDmjKfi/7fkZaryh5HuOmTtixe1EupQI5XfXO8joc3d27uUZ0QdC++euA==}
     engines: {node: '>=18.0.0'}
@@ -235,6 +245,15 @@ packages:
   '@graphql-yoga/logger@2.0.0':
     resolution: {integrity: sha512-Mg8psdkAp+YTG1OGmvU+xa6xpsAmSir0hhr3yFYPyLNwzUj95DdIwsMpKadDj9xDpYgJcH3Hp/4JMal9DhQimA==}
     engines: {node: '>=18.0.0'}
+
+  '@graphql-yoga/plugin-apollo-inline-trace@3.7.0':
+    resolution: {integrity: sha512-n4bdDg+zEghR2fgp9aNu9F873U0OxyHSpEcF1v+b/FuJSMDQyasm/e8m94/YLGon4gtTljs511megMpPUzZgWg==}
+    engines: {node: '>=18.0.0'}
+    peerDependencies:
+      '@graphql-tools/utils': ^10.0.0
+      '@whatwg-node/fetch': ^0.9.17
+      graphql: ^15.2.0 || ^16.0.0
+      graphql-yoga: ^5.7.0
 
   '@graphql-yoga/subscription@5.0.1':
     resolution: {integrity: sha512-1wCB1DfAnaLzS+IdoOzELGGnx1ODEg9nzQXFh4u2j02vAnne6d+v4A7HIH9EqzVdPLoAaMKXCZUUdKs+j3z1fg==}
@@ -1664,6 +1683,11 @@ snapshots:
       '@envelop/types': 5.0.0
       tslib: 2.8.0
 
+  '@envelop/on-resolve@4.1.1(@envelop/core@5.0.2)(graphql@16.9.0)':
+    dependencies:
+      '@envelop/core': 5.0.2
+      graphql: 16.9.0
+
   '@envelop/types@5.0.0':
     dependencies:
       tslib: 2.8.0
@@ -1792,6 +1816,18 @@ snapshots:
   '@graphql-yoga/logger@2.0.0':
     dependencies:
       tslib: 2.8.0
+
+  '@graphql-yoga/plugin-apollo-inline-trace@3.7.0(@envelop/core@5.0.2)(@graphql-tools/utils@10.5.5(graphql@16.9.0))(@whatwg-node/fetch@0.9.22)(graphql-yoga@5.7.0(graphql@16.9.0))(graphql@16.9.0)':
+    dependencies:
+      '@apollo/usage-reporting-protobuf': 4.1.1
+      '@envelop/on-resolve': 4.1.1(@envelop/core@5.0.2)(graphql@16.9.0)
+      '@graphql-tools/utils': 10.5.5(graphql@16.9.0)
+      '@whatwg-node/fetch': 0.9.22
+      graphql: 16.9.0
+      graphql-yoga: 5.7.0(graphql@16.9.0)
+      tslib: 2.8.0
+    transitivePeerDependencies:
+      - '@envelop/core'
 
   '@graphql-yoga/subscription@5.0.1':
     dependencies:

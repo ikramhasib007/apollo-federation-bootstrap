@@ -37,7 +37,7 @@ type Book implements Product
   id: ID!
   name: String! @join__field(graph: PRODUCTS)
   price: Int! @join__field(graph: PRODUCTS)
-  author: Author @join__field(graph: PRODUCTS)
+  author: Author! @join__field(graph: PRODUCTS)
 }
 
 scalar join__FieldSet
@@ -59,6 +59,16 @@ enum link__Purpose {
   `EXECUTION` features provide metadata necessary for operation execution.
   """
   EXECUTION
+}
+
+type Movie implements Product
+  @join__implements(graph: PRODUCTS, interface: "Product")
+  @join__type(graph: PRODUCTS, key: "id")
+{
+  id: ID!
+  name: String!
+  price: Int!
+  director: String!
 }
 
 type Mutation
