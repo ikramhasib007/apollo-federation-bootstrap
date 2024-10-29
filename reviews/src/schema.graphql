@@ -1,7 +1,7 @@
 extend schema
   @link(
     url: "https://specs.apollo.dev/federation/v2.3"
-    import: ["@key", "@shareable"]
+    import: ["@key", "@interfaceObject"]
   )
 
 type Query {
@@ -9,13 +9,6 @@ type Query {
   # topRatedProducts: [Product!]!
 }
 
-interface MutationResponse {
-  status: ResponseStatus!
-}
-type SubmitReviewResponse implements MutationResponse {
-  status: ResponseStatus!
-  review: Review
-}
 type Mutation {
   submitReview(data: SubmitReviewInput!): SubmitReviewResponse!
 }
@@ -23,12 +16,8 @@ type Mutation {
 type Review @key(fields: "id") {
   id: ID!
   score: Int!
-  book: Book
-  author: Author
-}
-
-type Book @key(fields: "id", resolvable: false) {
-  id: ID!
+  product: Product!
+  author: Author!
 }
 
 type Author @key(fields: "id") {
@@ -36,9 +25,19 @@ type Author @key(fields: "id") {
   reviews: [Review!]!
 }
 
-# type Product @key(fields: "id", resolvable: false) {
-#   id: ID!
-# }
+type Product @key(fields: "id") @interfaceObject {
+  id: ID!
+  reviews: [Review!]!
+}
+
+interface MutationResponse {
+  status: ResponseStatus!
+}
+
+type SubmitReviewResponse implements MutationResponse {
+  status: ResponseStatus!
+  review: Review
+}
 
 input SubmitReviewInput {
   score: Int!

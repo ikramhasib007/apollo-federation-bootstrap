@@ -32,12 +32,12 @@ type Author
 type Book implements Product
   @join__implements(graph: PRODUCTS, interface: "Product")
   @join__type(graph: PRODUCTS, key: "id")
-  @join__type(graph: REVIEWS, key: "id", resolvable: false)
 {
   id: ID!
-  name: String! @join__field(graph: PRODUCTS)
-  price: Int! @join__field(graph: PRODUCTS)
-  author: Author! @join__field(graph: PRODUCTS)
+  name: String!
+  price: Int!
+  author: Author!
+  reviews: [Review!]! @join__field
 }
 
 scalar join__FieldSet
@@ -69,6 +69,7 @@ type Movie implements Product
   name: String!
   price: Int!
   director: String!
+  reviews: [Review!]! @join__field
 }
 
 type Mutation
@@ -84,19 +85,23 @@ interface MutationResponse
 }
 
 interface Product
-  @join__type(graph: PRODUCTS)
+  @join__type(graph: PRODUCTS, key: "id")
+  @join__type(graph: REVIEWS, key: "id", isInterfaceObject: true)
 {
   id: ID!
-  name: String!
-  price: Int!
+  name: String! @join__field(graph: PRODUCTS)
+  price: Int! @join__field(graph: PRODUCTS)
+  reviews: [Review!]! @join__field(graph: REVIEWS)
 }
 
 type Query
   @join__type(graph: PRODUCTS)
   @join__type(graph: REVIEWS)
 {
-  topProducts: [Book!]! @join__field(graph: PRODUCTS)
+  product(id: ID!): Product! @join__field(graph: PRODUCTS)
+  topProducts: [Product!]! @join__field(graph: PRODUCTS)
   authors: [Author!]! @join__field(graph: PRODUCTS)
+  books: [Book!]! @join__field(graph: PRODUCTS)
   reviews: [Review!]! @join__field(graph: REVIEWS)
 }
 
@@ -108,13 +113,12 @@ enum ResponseStatus
 }
 
 type Review
-  @join__type(graph: PRODUCTS, key: "id", resolvable: false)
   @join__type(graph: REVIEWS, key: "id")
 {
   id: ID!
-  score: Int! @join__field(graph: REVIEWS)
-  book: Book @join__field(graph: REVIEWS)
-  author: Author @join__field(graph: REVIEWS)
+  score: Int!
+  product: Product!
+  author: Author!
 }
 
 input SubmitReviewInput
