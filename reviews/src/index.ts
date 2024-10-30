@@ -1,21 +1,36 @@
+import 'dotenv/config'
 import { parse } from "graphql";
 import { readFileSync } from "node:fs";
 import { buildSubgraphSchema } from "@apollo/subgraph";
 import { createYoga, maskError } from "graphql-yoga";
 import { createServer } from "http";
 import * as dataSources from "./data";
-import { Author, Product, Resolvers, ResponseStatus, Review } from "./generated/graphql";
+import {
+  Author,
+  Product,
+  Resolvers,
+  ResponseStatus,
+  Review,
+} from "./generated/graphql";
+import Context from "./context";
+import getUserId, { getRequestId } from "./getUserId";
 
 const typeDefs = parse(readFileSync("./src/schema.graphql", "utf8"));
 
-const resolvers: Resolvers = {
+const resolvers: Resolvers<Context> = {
   Query: {
     reviews: async (parent, args, ctx, info) => {
       return dataSources.api.allReviews() as unknown as Review[];
     },
-    // topRatedProducts: async (parent, args, ctx, info) => {
-    //   return dataSources.api.allReviews()
-    // },
+    topRatedProducts: async (parent, args, { request }, info) => {
+      // const requestId = getRequestId(request, false)
+      const userId = getUserId(request, false)
+      const topRated = dataSources.api
+        .allReviews()
+        .sort((a, b) => b.score - a.score);
+      const products = topRated.map((p) => ({ id: p.productId }));
+      return products as Product[]
+    },
   },
   Mutation: {
     submitReview: async (parent, args, createContext, info) => {
@@ -58,6 +73,15 @@ const resolvers: Resolvers = {
 };
 
 const yoga = createYoga({
+  cors: {
+    allowedHeaders: [
+      'X-Custom-Header',
+      'X-Authorization',
+      'Authorization',
+      'Content-Type',
+    ],
+    methods: ['POST'],
+  },
   schema: buildSubgraphSchema([{ typeDefs, resolvers }]),
   maskedErrors: {
     maskError(error, message, isDev) {

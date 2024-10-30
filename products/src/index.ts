@@ -1,3 +1,4 @@
+import 'dotenv/config'
 import { parse } from "graphql";
 import { readFileSync } from 'node:fs'
 import { buildSubgraphSchema } from "@apollo/subgraph";
@@ -64,6 +65,15 @@ const resolvers: Resolvers = {
   }
 };
 const yoga = createYoga({
+  cors: {
+    allowedHeaders: [
+      'X-Custom-Header',
+      'X-Authorization',
+      'Authorization',
+      'Content-Type',
+    ],
+    methods: ['POST'],
+  },
   schema: buildSubgraphSchema([{ typeDefs, resolvers }]),
   maskedErrors: {
     maskError(error, message, isDev) {

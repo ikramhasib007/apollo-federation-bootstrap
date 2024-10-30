@@ -6,7 +6,7 @@ extend schema
 
 type Query {
   reviews: [Review!]!
-  # topRatedProducts: [Product!]!
+  topRatedProducts: [Product!]!
 }
 
 type Mutation {
